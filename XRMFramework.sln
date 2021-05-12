@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30105.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "10. XRMFramework", "10. XRMFramework", "{62502D92-6492-49AE-AF40-0F226BB916A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "00. Tests", "00. Tests", "{7F400D1C-D5F0-466F-A2F0-BF154E1DE76D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRMFramework.Tests", "tests\XRMFramework.Tests\XRMFramework.Tests.csproj", "{DC13E370-7DAD-4509-925F-4453D07E10CA}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XRMFramework.Entity", "src\XRMFramework.Entity\XRMFramework.Entity.shproj", "{0A77F1AE-387B-4F74-8CBD-03F5BB15287B}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XRMFramework.Plugin", "src\XRMFramework.Plugin\XRMFramework.Plugin.shproj", "{DF1B2B10-9F1C-424F-A8E1-5FF7B825E34B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XRMFramework.TestsHelpers", "tests\XRMFramework.TestHelpers\XRMFramework.TestsHelpers.csproj", "{61EE7C11-9B2F-4E65-A965-032A188CDC38}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\XRMFramework.Entity\XRMFramework.Entity.projitems*{0a77f1ae-387b-4f74-8cbd-03f5bb15287b}*SharedItemsImports = 13
+		src\XRMFramework.Entity\XRMFramework.Entity.projitems*{dc13e370-7dad-4509-925f-4453d07e10ca}*SharedItemsImports = 4
+		src\XRMFramework.Plugin\XrmFramework.Plugin.projitems*{dc13e370-7dad-4509-925f-4453d07e10ca}*SharedItemsImports = 4
+		src\XRMFramework.Plugin\XrmFramework.Plugin.projitems*{df1b2b10-9f1c-424f-a8e1-5ff7b825e34b}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Local|Any CPU = Local|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Local|Any CPU.Build.0 = Local|Any CPU
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC13E370-7DAD-4509-925F-4453D07E10CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Local|Any CPU.ActiveCfg = Local|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Local|Any CPU.Build.0 = Local|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC13E370-7DAD-4509-925F-4453D07E10CA} = {7F400D1C-D5F0-466F-A2F0-BF154E1DE76D}
+		{0A77F1AE-387B-4F74-8CBD-03F5BB15287B} = {62502D92-6492-49AE-AF40-0F226BB916A1}
+		{DF1B2B10-9F1C-424F-A8E1-5FF7B825E34B} = {62502D92-6492-49AE-AF40-0F226BB916A1}
+		{61EE7C11-9B2F-4E65-A965-032A188CDC38} = {7F400D1C-D5F0-466F-A2F0-BF154E1DE76D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D253132A-B0F0-46A8-9B3C-3930458CEBEC}
+	EndGlobalSection
+EndGlobal

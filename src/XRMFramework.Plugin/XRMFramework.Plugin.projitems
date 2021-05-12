@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>df1b2b10-9f1c-424f-a8e1-5ff7b825e34b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>XRMFramework</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Composition\CompositionRoot.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Composition\CompositionRootCore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\Container.MapCollection.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\Container.MapComposite.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\Container.MapDecorator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\Container.MapGenericType.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\SuperSimpleCRMInjector.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\TypeHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\CRMLogger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\DateTimeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\IEventHandler.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\Models\Enumeration.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\Models\MultiSelectOptionSetEnum.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\ReadOnlyModel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\XRMSettingsContextCore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\XRMUserContextCore.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\DataAccess\CRUDOperations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Mapping\ModelMapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Net\CrmWebClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Net\CrmWebClientBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Net\CrmWebClientBuilderFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\CustomAPI.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\CustomPluginContext.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\ExtensionBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\PluginBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Text\JSon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Text\StringUtils.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\DateTimeValidations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\DoubleValidations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\IEnumerableValidations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\Int32Validations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\ObjectValidations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\StringValidations.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\ValidationHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\ValueTypeComparisons.cs" />
+  </ItemGroup>
+</Project>
