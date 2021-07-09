@@ -6,7 +6,7 @@ using Microsoft.Xrm.Sdk;
 
 using System;
 
-namespace XRMFramework.Test.FakeXRMEasy
+namespace XRMFramework.TestHelpers.FakeXRMEasy.Extensions
 {
     public static class XrmFakedContextExtensions
     {
