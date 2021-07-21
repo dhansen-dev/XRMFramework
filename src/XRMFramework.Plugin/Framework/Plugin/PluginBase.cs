@@ -209,8 +209,8 @@ namespace XRMFramework.Plugin
         /// <typeparam name="TEntity">The Entity to register the plugin for</typeparam>
         /// <param name="stepName">The name of the step. This has to be unique within a plugin</param>
         /// <param name="registration">Fluent registration of a plugin step</param>
-        protected void AddPluginStep(string stepName, string stepId, Func<PluginStep<Entity>, PluginStep> registration)
-                            => AddPluginStep<Entity>(stepName, stepId, registration);
+        protected void AddPluginStep(string message, string stepName, string stepId, Func<PluginStep<Entity>, PluginStep> registration)
+                            => AddPluginStep<Entity>(message, stepName, stepId, registration);
 
         /// <summary>
         /// Add a plugin step to the calling plugin. The defaults are
@@ -223,7 +223,7 @@ namespace XRMFramework.Plugin
         /// <typeparam name="TEntity">The Entity to register the plugin for</typeparam>
         /// <param name="stepName">The name of the step. This has to be unique within a plugin</param>
         /// <param name="registration">Fluent registration of a plugin step</param>
-        protected void AddPluginStep<TEntity>(string stepName, string stepId, Func<PluginStep<TEntity>, PluginStep> registration) where TEntity : Entity, new()
+        protected void AddPluginStep<TEntity>(string message, string stepName, string stepId, Func<PluginStep<TEntity>, PluginStep> registration) where TEntity : Entity, new()
         {
             var step = new PluginStep<TEntity>(stepName)
             {
@@ -231,7 +231,8 @@ namespace XRMFramework.Plugin
                 Rank = RegisteredPluginSteps.Count() + 1,
                 MaxDepth = 1,
                 Mode = Mode.Synchronous,
-                Stage = Stage.PostOperation
+                Stage = Stage.PostOperation,
+                Message = message
             };
 
             registration(step);
@@ -325,13 +326,6 @@ namespace XRMFramework.Plugin
 
         public PluginStep<TEntity> RunSynchronous()
             => Apply(() => Mode = Mode.Synchronous);
-
-        public PluginStep<TEntity> TriggerOnMessage(string pluginMessage, string route = null)
-                            => Apply(() =>
-                            {
-                                Message = pluginMessage;
-                                Route = route;
-                            });
 
         private IEnumerable<string> GetAttributeNameFromExpression(Expression<Func<TEntity, object>> expression)
         {
@@ -458,7 +452,6 @@ namespace XRMFramework.Plugin
         public string[] PostEntityImageAttributes { get; protected internal set; }
         public string[] PreEntityImageAttributes { get; protected internal set; }
         public int Rank { get; protected internal set; }
-        public string Route { get; protected internal set; }
         public Stage Stage { get; protected internal set; }
         public SupportedDeployment SupportedDeployment { get; protected internal set; }
         public string TriggerOnEntity { get; protected internal set; }

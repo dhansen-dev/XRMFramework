@@ -39,8 +39,7 @@ namespace XRMFramework.Tests.PluginRegistration
 
         protected override void PluginSteps()
         {
-            AddPluginStep<Account>("Async test step", "931ed7d8-7c8b-44ad-9697-d013faa14293", step => step
-                .TriggerOnMessage(Message.Create)
+            AddPluginStep<Account>(Message.Create, "Async test step", "931ed7d8-7c8b-44ad-9697-d013faa14293", step => step
                 .Execute(async () =>
                 {
                     await Task.Delay(3000).ConfigureAwait(false);

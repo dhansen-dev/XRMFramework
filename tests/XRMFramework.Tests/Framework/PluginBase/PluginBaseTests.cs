@@ -52,6 +52,22 @@ namespace XRMFramework.Tests.PluginRegistration
             return step;
         }
 
+        [Test]
+        public void PluginBase_RegisterImagesWithFilteringAttributes_ImageAttributesAndFilteringAttributesAreTheSame()
+        {
+            var step = GetPluginstepForPlugin<AccountPostCreateWithImageAndFilteringAttributesSetToTheSamePlugin>();
+
+            step.FilteringAttributes.Should().Contain("name").And.HaveCount(1);
+            step.EntityImages.Should().HaveCount(2);
+            step.PostEntityImageAttributes.Should().Contain("name").And.HaveCount(1);
+            step.PreEntityImageAttributes.Should().Contain("name").And.HaveCount(1);
+            step.Rank.Should().Be(1);
+            step.TriggerOnEntity.Should().Be("account");
+            step.Stage.Should().Be(Stage.PostOperation);
+            step.Mode.Should().Be(Mode.Synchronous);
+            step.Message.Should().Be(Message.Create);
+        }
+
         public class AccountPostCreatePlugin : PluginBase
         {
             public override string ExtensionId => Guid.NewGuid().ToString();
@@ -60,9 +76,24 @@ namespace XRMFramework.Tests.PluginRegistration
 
             protected override void PluginSteps()
             {
-                AddPluginStep<Account>("Test_Step", Guid.NewGuid().ToString(), step => step.
+                AddPluginStep<Account>(Message.Create, "Test_Step", Guid.NewGuid().ToString(), step => step
+                    .StepDescription("Test_Step")
+                    .FilterOnAttributes(a => a.AccountName)
+                    );
+            }
+        }
+
+        public class AccountPostCreateWithImageAndFilteringAttributesSetToTheSamePlugin : PluginBase
+        {
+            public override string ExtensionId => Guid.NewGuid().ToString();
+
+            public override string ExtensionDescription => "";
+
+            protected override void PluginSteps()
+            {
+                AddPluginStep<Account>(Message.Create, "Test_Step", Guid.NewGuid().ToString(), step => step.
                     StepDescription("Test_Step")
-                                .FilterOnAttributes(a => a.AccountName)
+                                .FilterOnAttributes(a => a.AccountName, ImageType.Both)
                     );
             }
         }
@@ -75,7 +106,7 @@ namespace XRMFramework.Tests.PluginRegistration
 
             protected override void PluginSteps()
             {
-                AddPluginStep<Account>("Test_Step", Guid.NewGuid().ToString(), step => step.
+                AddPluginStep<Account>(Message.Create, "Test_Step", Guid.NewGuid().ToString(), step => step.
                     StepDescription("Test_Step")
                                 .FilterOnAttributes(a => new { a.AccountName })
                     );
