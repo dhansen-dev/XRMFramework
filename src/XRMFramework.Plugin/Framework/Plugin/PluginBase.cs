@@ -306,9 +306,8 @@ namespace XRMFramework.Plugin
         public PluginStep<TEntity> FilterOnAttributes(Expression<Func<TEntity, object>> attributeSelector, ImageType imageType)
         {
             FilteringAttributes = GetAttributeNameFromExpression(attributeSelector).ToArray();
-            WithImage(imageType, attributeSelector);
 
-            return this;
+            return WithImage(imageType, attributeSelector);
         }
 
         public PluginStep<TEntity> StepDescription(string pluginDescription)
@@ -338,7 +337,7 @@ namespace XRMFramework.Plugin
         {
             var lambda = (LambdaExpression)expression;
 
-            if (expression.NodeType == ExpressionType.New)
+            if (lambda.Body.NodeType == ExpressionType.New)
             {
                 var newExpression = (NewExpression)lambda.Body;
 
@@ -347,9 +346,8 @@ namespace XRMFramework.Plugin
                     yield return GetAttributeName(member.Name);
                 }
             }
-            else if (expression.NodeType == ExpressionType.MemberAccess)
+            else
             {
-
                 yield return GetAttributeName(GetPropertyName(expression));
             }
         }
@@ -367,7 +365,7 @@ namespace XRMFramework.Plugin
 
             var attributes = GetAttributeNameFromExpression(expression).ToArray();
 
-            
+
             if (imageType == ImageType.PreImage)
             {
                 PreEntityImageAttributes = attributes;
@@ -412,7 +410,7 @@ namespace XRMFramework.Plugin
                         .GetCustomAttribute<AttributeLogicalNameAttribute>()
                         ?.LogicalName ?? throw new NullReferenceException("Couldnt find any attribute name for property " + propertyName);
         }
-       
+
         protected string GetPropertyName(Expression<Func<TEntity, object>> expression)
         {
             var lambda = (LambdaExpression)expression;

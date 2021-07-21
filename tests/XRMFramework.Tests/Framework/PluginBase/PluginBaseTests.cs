@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using XrmFramework.Tests.TestData.Models;
+
 using XRMFramework.Plugin;
 
 namespace XRMFramework.Tests.PluginRegistration
@@ -17,18 +19,37 @@ namespace XRMFramework.Tests.PluginRegistration
         [Test]
         public void PluginBase_WhenRegisteringAPlugin_StepShouldBeConfiguredAccordingly()
         {
-            var plugin = new AccountPostCreatePlugin();
-
-            var steps = typeof(PluginBase).GetProperty("RegisteredPluginSteps", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(plugin) as List<PluginStep>;
-
-            var step = steps.Single();
+            var step = GetPluginstepForPlugin<AccountPostCreatePlugin>();
 
             step
                 .Description.Should().Be("Test_Step");
 
             step.Stage.Should().Be(Stage.PostOperation);
 
-            step.FilteringAttributes.Should().Contain("some_attribute").And.HaveCount(1);
+            step.FilteringAttributes.Should().Contain("name").And.HaveCount(1);
+        }
+
+        [Test]
+        public void PluginBase_WhenRegisteringPluginWithnewExpressionForFilteringAttributes_StepShouldBeConfiguredAccordingly()
+        {
+            var step = GetPluginstepForPlugin<AccountPostCreateNewExpressionForFilteringAttributesPlugin>();
+
+            step.Description.Should().Be("Test_Step");
+
+            step.Stage.Should().Be(Stage.PostOperation);
+
+            step.FilteringAttributes.Should().Contain("name").And.HaveCount(1);
+        }
+
+        public PluginStep GetPluginstepForPlugin<TPlugin>() where TPlugin : new()
+        {
+            var plugin = Activator.CreateInstance<TPlugin>();
+
+            var steps = typeof(PluginBase).GetProperty("RegisteredPluginSteps", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(plugin) as List<PluginStep>;
+
+            var step = steps.Single();
+
+            return step;
         }
 
         public class AccountPostCreatePlugin : PluginBase
@@ -39,11 +60,24 @@ namespace XRMFramework.Tests.PluginRegistration
 
             protected override void PluginSteps()
             {
-                AddPluginStep("Test_Step", Guid.NewGuid().ToString(), step => step.
+                AddPluginStep<Account>("Test_Step", Guid.NewGuid().ToString(), step => step.
                     StepDescription("Test_Step")
-                                .ExecuteInStage(Stage.PostOperation)
-                                .RunSynchronous()
-                                .FilterOnAttributes("some_attribute")
+                                .FilterOnAttributes(a => a.AccountName)
+                    );
+            }
+        }
+
+        public class AccountPostCreateNewExpressionForFilteringAttributesPlugin : PluginBase
+        {
+            public override string ExtensionId => Guid.NewGuid().ToString();
+
+            public override string ExtensionDescription => "";
+
+            protected override void PluginSteps()
+            {
+                AddPluginStep<Account>("Test_Step", Guid.NewGuid().ToString(), step => step.
+                    StepDescription("Test_Step")
+                                .FilterOnAttributes(a => new { a.AccountName })
                     );
             }
         }

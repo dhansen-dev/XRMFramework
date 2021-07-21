@@ -5,6 +5,8 @@ using NUnit.Framework;
 using System;
 using System.Threading.Tasks;
 
+using XrmFramework.Tests.TestData.Models;
+
 using XRMFramework.Core;
 using XRMFramework.Plugin;
 
@@ -45,15 +47,5 @@ namespace XRMFramework.Tests.PluginRegistration
                 })
             );
         }
-    }
-
-    public class Account : EntityBase
-    {
-        public Account() : base("account")
-        {
-        }
-
-        [AttributeLogicalName("async_test")]
-        public string AsyncTestProperty { get; set; }
     }
 }
