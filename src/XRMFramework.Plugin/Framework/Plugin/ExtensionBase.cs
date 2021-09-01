@@ -53,7 +53,7 @@ namespace XRMFramework.Plugin
 
                 throw;
             }
-            catch (Exception ex)
+            catch (Exception ex) when(!(ex is InvalidPluginExecutionException))
             {
                 HandleError(serviceProvider, ex);
 
