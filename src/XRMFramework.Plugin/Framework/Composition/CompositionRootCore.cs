@@ -32,7 +32,7 @@ namespace XRMFramework.Composition
 
             var serviceFactory = serviceProvider.GetService<IOrganizationServiceFactory>();
             var pluginExecutionContext = serviceProvider.GetService<IPluginExecutionContext>();
-            var service = serviceFactory.CreateOrganizationService(pluginExecutionContext.UserId);
+            var service = serviceFactory.CreateOrganizationService(pluginExecutionContext.InitiatingUserId);
             var adminService = serviceFactory.CreateOrganizationService(null);
             var tracingService = serviceProvider.GetService<ITracingService>();
 
@@ -90,7 +90,7 @@ namespace XRMFramework.Composition
 
             var completeAttributes = defaultAttributes.Union(userAttributes).ToArray();
 
-            var user = adminService.Retrieve("systemuser", pluginExecutionContext.UserId, new ColumnSet(completeAttributes));
+            var user = adminService.Retrieve("systemuser", pluginExecutionContext.InitiatingUserId, new ColumnSet(completeAttributes));
 
             return new XRMUserContext(
                 user.Id,

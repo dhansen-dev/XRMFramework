@@ -60,8 +60,8 @@ namespace XRMFramework.Core
         public static CRMLogger GetRootLogger(ITracingService tracingService)
             => new CRMLogger(tracingService);
 
-        public CRMLogger Log(string message, params string[] args)
-            => TraceIndented(message, args);
+        public CRMLogger Log(string message)
+            => TraceIndented(message);
 
 
         public CRMLogger NewBlock()
@@ -77,9 +77,9 @@ namespace XRMFramework.Core
             return _parentLogger;
         }
 
-        private CRMLogger TraceIndented(string message, params string[] args)
+        private CRMLogger TraceIndented(string message)
         {
-            var indentedMessage = AddIndent(_currentIndentationLevel, string.Format(message, args));
+            var indentedMessage = AddIndent(_currentIndentationLevel, message);
 
             _tracingService.Trace(indentedMessage);
 
@@ -128,7 +128,7 @@ namespace XRMFramework.Core
                     {
                         nestedLogger = nestedLogger.
                                         NewIndentedBlock()
-                                            .Log($"Logged inner exception of type {innerException.GetType().Name} -> {innerException.Message}")
+                                            .Log($"Logged inner exception of type {innerException.GetType().Name} -> {innerException.Message ?? "No message"}")
                                             .Log(innerException.StackTrace);
 
                         innerException = innerException.InnerException;
@@ -152,17 +152,27 @@ namespace XRMFramework.Core
         {
             Log("Plugin context")
             .Log($"{nameof(pex.MessageName)}: {pex.MessageName}")
+            .Log($"{nameof(pex.Stage)}: {GetStageName(pex.Stage)}")
+            .Log($"Is async: {(pex.Mode == 1)}")
             .Log($"{nameof(pex.Depth)}: {pex.Depth}")
             .Log($"Primary entity: {pex.PrimaryEntityName} ({pex.PrimaryEntityId})")
             .Log($"{nameof(pex.UserId)}: {pex.UserId}")
             .Log($"{nameof(pex.InitiatingUserId)}: {pex.InitiatingUserId}")
             .Log("Attributes")
             .Log("=======================");
-
+            
             LogAttributes(pex);
 
             return this;
+
+            string GetStageName(int stage)
+                =>    stage == 10 ? "PreValidation"
+                    : stage == 20 ? "PreOperation"
+                    : stage == 30 ? "MainOperation"
+                    : stage == 40 ? "PostOperation"
+                    : "Unknown";
         }
+
 
         private CRMLogger LogAttributes(IPluginExecutionContext pex)
         {

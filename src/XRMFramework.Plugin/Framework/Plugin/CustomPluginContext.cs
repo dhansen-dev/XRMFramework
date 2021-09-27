@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace XRMFramework.Plugin
@@ -55,11 +56,22 @@ namespace XRMFramework.Plugin
                 return MergedEntity as TEntity;
             }
 
+            var target = Target;
+
             Entity mergeEntity;
 
-            if (Target != null)
+            if (target != null)
             {
-                mergeEntity = Target?.ToEntity<TEntity>();
+                var copiedEntity =  new Entity(target.LogicalName, target.Id)
+                {
+                    EntityState = target.EntityState,
+                    RowVersion = target.RowVersion
+                };
+                
+                copiedEntity.KeyAttributes.AddRange(target.KeyAttributes.Select(keyAttr => new KeyValuePair<string, object>(keyAttr.Key, keyAttr.Value)));
+                copiedEntity.Attributes.AddRange(target.Attributes.Select(attr => new KeyValuePair<string, object>(attr.Key, attr.Value)));
+
+                mergeEntity = copiedEntity;
             }
             else
             {
@@ -149,7 +161,8 @@ namespace XRMFramework.Plugin
         public EntityReference TargetEntityReference
             => GetInputParameterObject<EntityReference>("Target");
 
-        public Guid UserId => _executionContext.InitiatingUserId;
+        public Guid InitiatingUserId => _executionContext.InitiatingUserId;
+        public Guid UserId => _executionContext.UserId;
 
         public TReturn GetInputParameter<TReturn>(string key, Func<object, TReturn> mutator = null)
         {
