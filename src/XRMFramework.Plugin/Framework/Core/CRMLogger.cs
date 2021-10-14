@@ -158,8 +158,9 @@ namespace XRMFramework.Core
             .Log($"Primary entity: {pex.PrimaryEntityName} ({pex.PrimaryEntityId})")
             .Log($"{nameof(pex.UserId)}: {pex.UserId}")
             .Log($"{nameof(pex.InitiatingUserId)}: {pex.InitiatingUserId}")
-            .Log("Attributes")
-            .Log("=======================");
+            .Log($"{nameof(pex.BusinessUnitId)}: {pex.BusinessUnitId}")
+            .Log($"{nameof(pex.CorrelationId)}: {pex.CorrelationId}")
+            .Log("Attributes");
             
             LogAttributes(pex);
 
@@ -182,7 +183,7 @@ namespace XRMFramework.Core
             {
                 case null:
                     {
-                        foreach (var input in pex.InputParameters)
+                        foreach (var input in pex.InputParameters.OrderBy(p => p.Key))
                         {
                             Log($"{input.Key}: {FormatValue(input.Value, null)}");
                         }
@@ -247,7 +248,7 @@ namespace XRMFramework.Core
                 var formatString = "";
                 var longestAttribute = e.Attributes.Keys.Max(x => x.Length);
 
-                foreach (var keypair in e.Attributes)
+                foreach (var keypair in e.Attributes.OrderBy(attr => attr.Key))
                 {
                     e.FormattedValues.TryGetValue(keypair.Key, out string formattedValue);
 

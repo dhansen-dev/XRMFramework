@@ -55,6 +55,7 @@ namespace XRMFramework.Composition
               .Map<CRUDOperations>()
               .Map<ModelMapper>()
               .Map(CRMLogger.GetRootLogger(tracingService))
+              .Map<ExecutionContext>()
               .Map(typeof(IEventHandler<>))
               .Map(typeof(IEventHandler<,>))
               ;

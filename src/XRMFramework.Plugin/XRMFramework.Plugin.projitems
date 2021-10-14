@@ -19,6 +19,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Container\TypeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\CRMLogger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\DateTimeProvider.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\ExecutionContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\IEventHandler.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\Models\Enumeration.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Core\Models\MultiSelectOptionSetEnum.cs" />

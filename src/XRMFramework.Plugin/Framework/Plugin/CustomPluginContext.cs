@@ -20,7 +20,7 @@ namespace XRMFramework.Plugin
     public class CustomPluginContext
     {
         private readonly IPluginExecutionContext _executionContext;
-        
+
         /// <summary>
         /// Contains a merge of Target  / Post and PreImage
         /// </summary>
@@ -34,7 +34,7 @@ namespace XRMFramework.Plugin
             SecureConfiguration = secureConfiguration;
         }
 
-        public CustomPluginContext ParentContext 
+        public CustomPluginContext ParentContext
             => new CustomPluginContext(_executionContext.ParentContext, InsecureConfiguration, SecureConfiguration);
 
         public int Depth => _executionContext.Depth;
@@ -62,12 +62,12 @@ namespace XRMFramework.Plugin
 
             if (target != null)
             {
-                var copiedEntity =  new Entity(target.LogicalName, target.Id)
+                var copiedEntity = new Entity(target.LogicalName, target.Id)
                 {
                     EntityState = target.EntityState,
                     RowVersion = target.RowVersion
                 };
-                
+
                 copiedEntity.KeyAttributes.AddRange(target.KeyAttributes.Select(keyAttr => new KeyValuePair<string, object>(keyAttr.Key, keyAttr.Value)));
                 copiedEntity.Attributes.AddRange(target.Attributes.Select(attr => new KeyValuePair<string, object>(attr.Key, attr.Value)));
 
@@ -155,7 +155,7 @@ namespace XRMFramework.Plugin
         public object this[string key]
         {
             get => _executionContext.InputParameters[key];
-            set => _executionContext.OutputParameters[key] = value; 
+            set => _executionContext.OutputParameters[key] = value;
         }
 
         public EntityReference TargetEntityReference
@@ -163,6 +163,10 @@ namespace XRMFramework.Plugin
 
         public Guid InitiatingUserId => _executionContext.InitiatingUserId;
         public Guid UserId => _executionContext.UserId;
+
+        public Guid CorrelationId => _executionContext.CorrelationId;
+
+        public Guid BusinessUnitId => _executionContext.BusinessUnitId;
 
         public TReturn GetInputParameter<TReturn>(string key, Func<object, TReturn> mutator = null)
         {
