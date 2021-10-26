@@ -35,7 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\CustomPluginContext.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\ExtensionBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Plugin\PluginBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Framework\Text\JSon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Framework\Text\Json.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Text\StringUtils.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\DateTimeValidations.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Framework\Util\Validation\DoubleValidations.cs" />

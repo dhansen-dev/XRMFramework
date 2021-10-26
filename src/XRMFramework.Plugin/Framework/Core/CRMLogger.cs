@@ -1,9 +1,15 @@
 ﻿using Microsoft.Xrm.Sdk;
 
+using Newtonsoft.Json;
+
+using Soderberg.XRM.Plugins.Models.Party.Requests;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using XRMFramework.Text;
 
 namespace XRMFramework.Core
 {
@@ -56,6 +62,9 @@ namespace XRMFramework.Core
 
             return this;
         }
+
+        public void LogObject(object logObject)
+            => Log(Json.Serialize(logObject));
 
         public static CRMLogger GetRootLogger(ITracingService tracingService)
             => new CRMLogger(tracingService);
