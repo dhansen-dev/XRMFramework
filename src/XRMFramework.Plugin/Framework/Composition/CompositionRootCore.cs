@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 using Microsoft.Xrm.Sdk.Query;
 
 using System;
@@ -35,6 +36,7 @@ namespace XRMFramework.Composition
             var service = serviceFactory.CreateOrganizationService(pluginExecutionContext.InitiatingUserId);
             var adminService = serviceFactory.CreateOrganizationService(null);
             var tracingService = serviceProvider.GetService<ITracingService>();
+            var appInsightsLogger = serviceProvider.GetService<ILogger>();
 
             var customPluginContext = new CustomPluginContext(pluginExecutionContext, insecureConfiguration, secureConfiguration);
 
@@ -54,7 +56,7 @@ namespace XRMFramework.Composition
               .Map<ICrmWebClientBuilder, CrmWebClientBuilder>()
               .Map<CRUDOperations>()
               .Map<ModelMapper>()
-              .Map(CRMLogger.GetRootLogger(tracingService))
+              .Map(CRMLogger.GetRootLogger(tracingService, appInsightsLogger))
               .Map<ExecutionContext>()
               .Map(typeof(IEventHandler<>))
               .Map(typeof(IEventHandler<,>))

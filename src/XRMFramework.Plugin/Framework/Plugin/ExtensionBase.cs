@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Extensions;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 using System;
 using System.Diagnostics;
@@ -69,16 +70,18 @@ namespace XRMFramework.Plugin
             void PrintStartMessage()
             {
                 var tracingService = serviceProvider.Get<ITracingService>();
+                var appInsightsLogger = serviceProvider.Get<ILogger>();
 
                 var context = serviceProvider.GetService<IPluginExecutionContext>();
 
-                CRMLogger.GetRootLogger(tracingService).Log($"Triggering for {context.PrimaryEntityName} with Id {context.PrimaryEntityId}");
+                CRMLogger.GetRootLogger(tracingService, appInsightsLogger).Log($"Triggering for {context.PrimaryEntityName} with Id {context.PrimaryEntityId}");
             }
 
             void PrintEndMessage()
             {
                 var tracingService = serviceProvider.Get<ITracingService>();
-                CRMLogger.GetRootLogger(tracingService).Log("Total execution time: " + timer.ElapsedMilliseconds + "ms");
+                var appInsightsLogger = serviceProvider.Get<ILogger>();
+                CRMLogger.GetRootLogger(tracingService, appInsightsLogger).Log("Total execution time: " + timer.ElapsedMilliseconds + "ms");
             }
 
         }
@@ -102,8 +105,9 @@ namespace XRMFramework.Plugin
         {
             var pluginExecutionContext = serviceProvider.GetService<IPluginExecutionContext>();
             var tracingService = serviceProvider.GetService<ITracingService>();
+            var appInsightslogger = serviceProvider.GetService<ILogger>();
 
-            var logger = CRMLogger.GetRootLogger(tracingService);
+            var logger = CRMLogger.GetRootLogger(tracingService, appInsightslogger);
 
             OnError(serviceProvider, ex);
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk;
+using Microsoft.Xrm.Sdk.PluginTelemetry;
 
 using Newtonsoft.Json;
 
@@ -19,15 +20,17 @@ namespace XRMFramework.Core
         private int _initialIndentationLevel = 0;
         private readonly CRMLogger _parentLogger;
         private readonly ITracingService _tracingService;
+        private readonly ILogger _appInsightsLogger;
 
         private readonly Dictionary<int, string> _tracingBlockHeaders = new Dictionary<int, string>();
 
-        private CRMLogger(ITracingService tracingService)
+        private CRMLogger(ITracingService tracingService, ILogger appInsightsLogger)
         {
             _tracingService = tracingService;
+            _appInsightsLogger = appInsightsLogger;
         }
 
-        private CRMLogger(ITracingService tracingService, int indentationLevel, CRMLogger parentLogger) : this(tracingService)
+        private CRMLogger(ITracingService tracingService, ILogger appInsightsLogger, int indentationLevel, CRMLogger parentLogger) : this(tracingService, appInsightsLogger)
         {
             _initialIndentationLevel = indentationLevel;
             _currentIndentationLevel = indentationLevel;
@@ -66,18 +69,18 @@ namespace XRMFramework.Core
         public void LogObject(object logObject)
             => Log(Json.Serialize(logObject));
 
-        public static CRMLogger GetRootLogger(ITracingService tracingService)
-            => new CRMLogger(tracingService);
+        public static CRMLogger GetRootLogger(ITracingService tracingService, ILogger appInsightsLogger)
+            => new CRMLogger(tracingService, appInsightsLogger);
 
         public CRMLogger Log(string message)
             => TraceIndented(message);
 
 
         public CRMLogger NewBlock()
-            => new CRMLogger(_tracingService, _currentIndentationLevel, this);
+            => new CRMLogger(_tracingService, _appInsightsLogger, _currentIndentationLevel, this);
 
         public CRMLogger NewIndentedBlock()
-            => new CRMLogger(_tracingService, _currentIndentationLevel, this)
+            => new CRMLogger(_tracingService, _appInsightsLogger, _currentIndentationLevel, this)
                         .AddIndent();
 
         public CRMLogger CloseBlock()
@@ -91,6 +94,7 @@ namespace XRMFramework.Core
             var indentedMessage = AddIndent(_currentIndentationLevel, message);
 
             _tracingService.Trace(indentedMessage);
+            _appInsightsLogger.LogInformation(indentedMessage);
 
             return this;
 
@@ -116,10 +120,15 @@ namespace XRMFramework.Core
 
         public CRMLogger LogException(Exception exception, bool includeStackTrace, bool includeInnerExceptions)
         {
+
             CRMLogger nestedLogger = this;
 
             if (exception != null)
             {
+                var logTitle = $"Logged exception of type {exception.GetType().Name} -> {exception.Message}";
+
+                _appInsightsLogger.LogError(exception, logTitle);
+
                 Log($"Logged exception of type {exception.GetType().Name} -> {exception.Message}");
 
                 if (includeStackTrace)
@@ -170,13 +179,13 @@ namespace XRMFramework.Core
             .Log($"{nameof(pex.BusinessUnitId)}: {pex.BusinessUnitId}")
             .Log($"{nameof(pex.CorrelationId)}: {pex.CorrelationId}")
             .Log("Attributes");
-            
+
             LogAttributes(pex);
 
             return this;
 
             string GetStageName(int stage)
-                =>    stage == 10 ? "PreValidation"
+                => stage == 10 ? "PreValidation"
                     : stage == 20 ? "PreOperation"
                     : stage == 30 ? "MainOperation"
                     : stage == 40 ? "PostOperation"
