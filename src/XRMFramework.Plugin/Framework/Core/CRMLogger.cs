@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.PluginTelemetry;
 
-using Newtonsoft.Json;
-
-using Soderberg.XRM.Plugins.Models.Party.Requests;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +56,6 @@ namespace XRMFramework.Core
                 }
 
                 totalIndentation--;
-
             } while (totalIndentation != 0 && all);
 
             return this;
@@ -74,7 +69,6 @@ namespace XRMFramework.Core
 
         public CRMLogger Log(string message)
             => TraceIndented(message);
-
 
         public CRMLogger NewBlock()
             => new CRMLogger(_tracingService, _appInsightsLogger, _currentIndentationLevel, this);
@@ -94,7 +88,7 @@ namespace XRMFramework.Core
             var indentedMessage = AddIndent(_currentIndentationLevel, message);
 
             _tracingService.Trace(indentedMessage);
-            _appInsightsLogger.LogInformation(indentedMessage);
+            _appInsightsLogger?.LogInformation(indentedMessage);
 
             return this;
 
@@ -120,7 +114,6 @@ namespace XRMFramework.Core
 
         public CRMLogger LogException(Exception exception, bool includeStackTrace, bool includeInnerExceptions)
         {
-
             CRMLogger nestedLogger = this;
 
             if (exception != null)
@@ -192,7 +185,6 @@ namespace XRMFramework.Core
                     : "Unknown";
         }
 
-
         private CRMLogger LogAttributes(IPluginExecutionContext pex)
         {
             pex.InputParameters.TryGetValue("Target", out object target);
@@ -241,6 +233,7 @@ namespace XRMFramework.Core
 
                     case string s:
                         return s;
+
                     case EntityCollection collection:
                         {
                             var entityString = string.Empty;
@@ -275,7 +268,6 @@ namespace XRMFramework.Core
 
                 return formatString;
             }
-
         }
 
         public CRMLogger LogTime()

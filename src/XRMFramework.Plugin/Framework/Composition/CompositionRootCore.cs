@@ -63,6 +63,8 @@ namespace XRMFramework.Composition
               ;
 
             AddMappings(_container);
+
+            AfterMappings(_container);
         }
 
         protected virtual string[] GetSystemUserAttributesForUserContext()
@@ -74,6 +76,11 @@ namespace XRMFramework.Composition
 
         public virtual void AddMappings(SuperSimpleCRMInjector container)
         {
+        }
+
+        public virtual void AfterMappings(SuperSimpleCRMInjector _container)
+        {
+
         }
 
         public virtual TType ResolveInstance<TType>()
