@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
 
@@ -21,6 +23,8 @@ namespace XRMFramework.Net
         /// <returns></returns>
         //string Post(string uri, string data);
         string Post<TInputModel>(string uri, TInputModel data);
+        string PostFormData<TFormData>(string uri, TFormData formData) where TFormData : class;
+
         string Post<TInputModel>(TInputModel data);
         string Put<TInputModel>(string uri, TInputModel data);
         string Put<TInputModel>(TInputModel data);
@@ -47,6 +51,23 @@ namespace XRMFramework.Net
 
         public string Post<TInputModel>(TInputModel data)
             => Post("", data);
+
+
+        public string PostFormData<TFormData>(string uri, TFormData formData) where TFormData : class
+        {
+            var nvc = new NameValueCollection();
+
+            foreach (var property in formData.GetType().GetProperties())
+            {
+                nvc.Add(property.Name, property.GetValue(formData)?.ToString());
+            }
+
+            var response = MakeCall(() => UploadValues(MakeUri(uri), nvc));
+
+            var responseString = System.Text.Encoding.Default.GetString(response);
+
+            return responseString;
+        }
 
         public string Put<TInputModel>(string uri, TInputModel data)
             => MakeCall(() => UploadString(MakeUri(uri), "PUT", Json.Serialize(data)));

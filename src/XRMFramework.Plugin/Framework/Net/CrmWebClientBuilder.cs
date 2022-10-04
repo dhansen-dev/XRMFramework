@@ -11,7 +11,7 @@ namespace XRMFramework.Net
         ICrmWebClientBuilder ResetBuilder();
 
         ICrmWebClientBuilder WithBaseUrl(Uri baseUrl);
-
+        ICrmWebClientBuilder WithBearerToken(string token);
         ICrmWebClientBuilder WithContentType(string contentType);
 
         ICrmWebClientBuilder WithContentTypeApplicationJson();
@@ -25,7 +25,7 @@ namespace XRMFramework.Net
 
     public class CrmWebClientBuilder : ICrmWebClientBuilder
     {
-        private readonly CrmWebClient _client;
+        private CrmWebClient _client;
 
         public CrmWebClientBuilder()
         {
@@ -33,7 +33,14 @@ namespace XRMFramework.Net
         }
 
         public ICrmWebClient CreateClient()
-            => _client;
+        {
+            var internalClient = _client;
+
+            _client = new CrmWebClient();
+
+            return internalClient;
+        }
+            
 
         public ICrmWebClientBuilder ResetBuilder()
             => new CrmWebClientBuilder();
@@ -41,6 +48,13 @@ namespace XRMFramework.Net
         public ICrmWebClientBuilder WithBaseUrl(Uri baseUrl)
         {
             _client.BaseAddress = baseUrl.ToString();
+
+            return this;
+        }
+
+        public ICrmWebClientBuilder WithBearerToken(string token)
+        {
+            _client.Headers.Add(HttpRequestHeader.Authorization, $"Bearer {token}");
 
             return this;
         }
