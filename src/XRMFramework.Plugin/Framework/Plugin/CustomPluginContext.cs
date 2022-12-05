@@ -137,6 +137,12 @@ namespace XRMFramework.Plugin
         /// </summary>
         public OptionSetValue StatusCode => GetInputParameterObject<OptionSetValue>("Status");
 
+        public void SetSharedVariable(string key, object value) => _executionContext.SharedVariables.Add(key, value);
+
+        public void SetOrUpdateSharedVariable(string key, object value) => _executionContext.SharedVariables.AddOrUpdateIfNotNull(key, value);
+
+        public TSharedVariable GetSharedVariable<TSharedVariable>(string key) => (TSharedVariable)_executionContext.SharedVariables[key];
+
         public Entity Target
         {
             get
@@ -147,7 +153,7 @@ namespace XRMFramework.Plugin
                 }
                 else
                 {
-                    throw new ArgumentException("Couldtn find Target in InputParamters", nameof(Target));
+                    throw new ArgumentException("Couldnt find Target in InputParamters", nameof(Target));
                 }
             }
         }
@@ -167,6 +173,8 @@ namespace XRMFramework.Plugin
         public Guid CorrelationId => _executionContext.CorrelationId;
 
         public Guid BusinessUnitId => _executionContext.BusinessUnitId;
+
+        public Guid PrimaryEntityId => _executionContext.PrimaryEntityId;
 
         public TReturn GetInputParameter<TReturn>(string key, Func<object, TReturn> mutator = null)
         {
