@@ -54,7 +54,7 @@ namespace XRMFramework.Composition
               .Map<IDateTimeProvider, DateTimeProvider>()
               .Map<ICrmWebClientBuilderFactory, CrmWebClientBuilderFactory>()
               .Map<ICrmWebClientBuilder, CrmWebClientBuilder>()
-              .Map<CRUDOperations>()
+              .Map<ICRUDOperations>()
               .Map<ModelMapper>()
               .Map(CRMLogger.GetRootLogger(tracingService, appInsightsLogger))
               .Map<ExecutionContext>()

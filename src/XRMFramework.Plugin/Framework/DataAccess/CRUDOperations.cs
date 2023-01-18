@@ -7,14 +7,28 @@ using System.Linq.Expressions;
 
 namespace XRMFramework.DataAccess
 {
-    public class CRUDOperations
+    public interface ICRUDOperations
+    {
+        Guid Create<TEntity>(TEntity entity) where TEntity : Entity;
+        void Delete<TEntity>(TEntity entity) where TEntity : Entity;
+        TResponse Execute<TResponse>(OrganizationRequest request) where TResponse : OrganizationResponse;
+        TResult Find<TEntity, TResult>(Guid entityId, Expression<Func<TEntity, TResult>> projection) where TEntity : Entity;
+        IQueryable<TEntity> QueryOver<TEntity>() where TEntity : Entity;
+        void RunAsOtherUser(Guid? userId, Action<ICRUDOperations> impersonatedAction);
+        TReturn RunAsOtherUser<TReturn>(Guid? userId, Func<ICRUDOperations, TReturn> impersonatedAction);
+        void RunAsSystem(Action<ICRUDOperations> impersonatedAction);
+        TReturn RunAsSystem<TReturn>(Func<ICRUDOperations, TReturn> impersonatedAction);
+        void Update<TEntity>(TEntity entity) where TEntity : Entity;
+    }
+
+    public class CRUDOperations : ICRUDOperations
     {
         private readonly IOrganizationService _organizationService;
         private readonly IOrganizationServiceFactory _serviceFactory;
 
         public CRUDOperations(IOrganizationService organizationService, IOrganizationServiceFactory serviceFactory)
         {
-            Context = new OrganizationServiceContext(organizationService)
+            _context = new OrganizationServiceContext(organizationService)
             {
                 MergeOption = MergeOption.NoTracking
             };
@@ -23,7 +37,7 @@ namespace XRMFramework.DataAccess
             _serviceFactory = serviceFactory;
         }
 
-        private OrganizationServiceContext Context { get; }
+        private readonly OrganizationServiceContext _context;
 
         public Guid Create<TEntity>(TEntity entity) where TEntity : Entity
             => _organizationService.Create(entity);
@@ -39,27 +53,27 @@ namespace XRMFramework.DataAccess
         }
 
         public TResult Find<TEntity, TResult>(Guid entityId, Expression<Func<TEntity, TResult>> projection) where TEntity : Entity
-                            => Context.CreateQuery<TEntity>().Where(t => t.Id == entityId).Select(projection).Single();
+                            => _context.CreateQuery<TEntity>().Where(t => t.Id == entityId).Select(projection).Single();
 
         public IQueryable<TEntity> QueryOver<TEntity>() where TEntity : Entity
-            => Context.CreateQuery<TEntity>();
+            => _context.CreateQuery<TEntity>();
 
-        public TReturn RunAsOtherUser<TReturn>(Guid? userId, Func<CRUDOperations, TReturn> impersonatedAction)
+        public TReturn RunAsOtherUser<TReturn>(Guid? userId, Func<ICRUDOperations, TReturn> impersonatedAction)
             => impersonatedAction(CreateImpersonatedService(userId));
 
-        public void RunAsOtherUser(Guid? userId, Action<CRUDOperations> impersonatedAction)
+        public void RunAsOtherUser(Guid? userId, Action<ICRUDOperations> impersonatedAction)
             => impersonatedAction(CreateImpersonatedService(userId));
 
-        public TReturn RunAsSystem<TReturn>(Func<CRUDOperations, TReturn> impersonatedAction)
+        public TReturn RunAsSystem<TReturn>(Func<ICRUDOperations, TReturn> impersonatedAction)
             => RunAsOtherUser(null, impersonatedAction);
 
-        public void RunAsSystem(Action<CRUDOperations> impersonatedAction)
+        public void RunAsSystem(Action<ICRUDOperations> impersonatedAction)
             => RunAsOtherUser(null, impersonatedAction);
 
         public void Update<TEntity>(TEntity entity) where TEntity : Entity
                     => _organizationService.Update(entity);
 
-        private CRUDOperations CreateImpersonatedService(Guid? userToImpersonate)
+        private ICRUDOperations CreateImpersonatedService(Guid? userToImpersonate)
         {
             var impersonatedService = _serviceFactory.CreateOrganizationService(userToImpersonate);
 

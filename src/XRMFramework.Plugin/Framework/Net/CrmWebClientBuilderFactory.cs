@@ -7,14 +7,14 @@
 
     public class CrmWebClientBuilderFactory : ICrmWebClientBuilderFactory
     {
-        private readonly ICrmWebClientBuilder webClientBuilder;
+        private readonly ICrmWebClientBuilder _webClientBuilder;
 
         public CrmWebClientBuilderFactory(ICrmWebClientBuilder webClientBuilder)
         {
-            this.webClientBuilder = webClientBuilder;
+            _webClientBuilder = webClientBuilder;
         }
 
         public ICrmWebClientBuilder CreateBuilder()
-            => webClientBuilder.ResetBuilder();
+            => _webClientBuilder.ResetBuilder();
     }
 }
